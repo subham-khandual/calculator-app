@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SC-200 | Scientific Calculator</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f97316'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='monospace' font-size='14' font-weight='bold' fill='white'%3E%2B2%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand">
+        <span class="brand-code">SC-200</span>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <span class="brand-name">Scientific Calculator</span>
+      </div>
+
+      <div class="top-actions">
+        <button id="historyToggleBtn" class="icon-btn mobile-only" type="button" aria-label="Toggle history">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <polyline points="12 7 12 12 15 14"></polyline>
+          </svg>
+          <span>History</span>
+        </button>
+        <button id="themeToggleBtn" class="icon-btn" type="button" aria-label="Toggle color theme" title="Switch Theme">
+          <svg id="themeSvgSun" class="hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+          <svg id="themeSvgMoon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="calculator-card" aria-label="Scientific Calculator">
+        <div class="display-bezel">
+          <div class="display-panel">
+            <div class="status-row">
+              <div class="status-badges">
+                <button id="angleModeBtn" class="badge-btn" type="button" title="Toggle Degree or Radian">DEG</button>
+                <span id="secondBadge" class="badge hidden">2ND</span>
+                <span id="memoryBadge" class="badge hidden">M</span>
+              </div>
+              <button id="copyBtn" class="copy-btn" type="button" title="Copy result">Copy</button>
+            </div>
+
+            <div id="expressionDisplay" class="expression-line" aria-live="polite"></div>
+            <div id="resultDisplay" class="result-line" aria-live="polite">0</div>
+          </div>
+        </div>
+
+        <div class="memory-row" role="group" aria-label="Memory controls">
+          <button class="mem-btn" type="button" data-action="mc">MC</button>
+          <button class="mem-btn" type="button" data-action="mr">MR</button>
+          <button class="mem-btn" type="button" data-action="m-plus">M+</button>
+          <button class="mem-btn" type="button" data-action="m-minus">M-</button>
+        </div>
+
+        <div class="keypad">
+          <!-- Row 1: Mode & Clear -->
+          <button id="secondBtn" class="key key-fn" type="button" data-action="second">2nd</button>
+          <button class="key key-fn" type="button" data-fn="sin" data-alt-fn="asin">sin</button>
+          <button class="key key-fn" type="button" data-fn="cos" data-alt-fn="acos">cos</button>
+          <button class="key key-fn" type="button" data-fn="tan" data-alt-fn="atan">tan</button>
+          <button class="key key-danger" type="button" data-action="clear">AC</button>
+          <button class="key key-danger" type="button" data-action="delete">DEL</button>
+
+          <!-- Row 2: Logs & Powers -->
+          <button class="key key-fn" type="button" data-fn="log" data-alt-op="10^">log</button>
+          <button class="key key-fn" type="button" data-fn="ln" data-alt-op="e^">ln</button>
+          <button class="key key-fn" type="button" data-op="^2" data-alt-op="^3">x²</button>
+          <button class="key key-fn" type="button" data-op="^">xʸ</button>
+          <button class="key key-fn" type="button" data-fn="sqrt" data-alt-fn="cbrt">√x</button>
+          <button class="key key-op" type="button" data-value="%">%</button>
+
+          <!-- Row 3: Brackets, Factorial, Division -->
+          <button class="key key-fn" type="button" data-value="(">(</button>
+          <button class="key key-fn" type="button" data-value=")">)</button>
+          <button class="key key-fn" type="button" data-op="!">n!</button>
+          <button class="key key-fn" type="button" data-op="inv">1/x</button>
+          <button class="key key-fn" type="button" data-fn="abs">|x|</button>
+          <button class="key key-op" type="button" data-value="/">÷</button>
+
+          <!-- Row 4: Constants, 7 8 9, Multiply -->
+          <button class="key key-fn" type="button" data-value="π">π</button>
+          <button class="key key-num" type="button" data-value="7">7</button>
+          <button class="key key-num" type="button" data-value="8">8</button>
+          <button class="key key-num" type="button" data-value="9">9</button>
+          <button class="key key-fn" type="button" data-value="e">e</button>
+          <button class="key key-op" type="button" data-value="*">×</button>
+
+          <!-- Row 5: EXP, 4 5 6, Subtract -->
+          <button class="key key-fn" type="button" data-value="E">EXP</button>
+          <button class="key key-num" type="button" data-value="4">4</button>
+          <button class="key key-num" type="button" data-value="5">5</button>
+          <button class="key key-num" type="button" data-value="6">6</button>
+          <button class="key key-fn" type="button" data-action="negate">+/-</button>
+          <button class="key key-op" type="button" data-value="-">-</button>
+
+          <!-- Row 6: ANS, 1 2 3, Add -->
+          <button class="key key-fn" type="button" data-value="ANS">ANS</button>
+          <button class="key key-num" type="button" data-value="1">1</button>
+          <button class="key key-num" type="button" data-value="2">2</button>
+          <button class="key key-num" type="button" data-value="3">3</button>
+          <button class="key key-num" type="button" data-value=".">.</button>
+          <button class="key key-op" type="button" data-value="+">+</button>
+
+          <!-- Row 7: 0 (wide) and Equals (wide) -->
+          <button class="key key-num span-2" type="button" data-value="0">0</button>
+          <button class="key key-fn" type="button" data-value="00">00</button>
+          <button class="key key-equals span-3" type="button" data-action="equals">=</button>
+        </div>
+      </section>
+
+      <aside id="historyPanel" class="history-card" aria-label="Calculation History">
+        <div class="history-header">
+          <h2>Tape / History</h2>
+          <button id="clearHistoryBtn" class="text-btn" type="button">Clear</button>
+        </div>
+        <div id="historyList" class="history-list">
+          <p class="history-empty">No calculations yet.</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
